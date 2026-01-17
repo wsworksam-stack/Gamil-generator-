@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Gmail Variations Generator</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  input, button { padding: 8px; margin: 5px 0; width: 300px; }
+  ul { margin-top: 10px; }
+  li { cursor: pointer; margin: 3px 0; color: black; transition: 0.3s; }
+  li.copied { text-decoration: line-through; color: gray; }
+</style>
+</head>
+<body>
+<h2>Gmail Variations Generator</h2>
+<input type="text" id="email" placeholder="Enter your Gmail" />
+<br>
+<button onclick="generateVariations()">Generate 20 Variations</button>
+
+<ul id="result"></ul>
+
+<script>
+function generateVariations() {
+    const email = document.getElementById('email').value.toLowerCase().trim();
+    if (!email.includes('@')) {
+        alert('Please enter a valid email!');
+        return;
+    }
+    const [name, domain] = email.split('@');
+    const resultList = document.getElementById('result');
+    resultList.innerHTML = '';
+
+    const variations = new Set();
+
+    while (variations.size < 100) {
+        let newEmail = '';
+        for (let i = 0; i < name.length; i++) {
+            newEmail += Math.random() < 0.5 ? name[i].toUpperCase() : name[i];
+        }
+        variations.add(newEmail + '@' + domain);
+    }
+
+    variations.forEach(v => {
+        const li = document.createElement('li');
+        li.textContent = v;
+        li.onclick = () => {
+            navigator.clipboard.writeText(v).then(() => {
+                li.classList.add('copied'); // Strike-through + grey
+            });
+        };
+        resultList.appendChild(li);
+    });
+}
+</script>
+</body>
+</html>
